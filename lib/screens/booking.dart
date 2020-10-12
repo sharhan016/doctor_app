@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../components/bookingConfirm.dart';
 
 final Map<DateTime, List> _holidays = {
   DateTime(2019, 1, 1): ['New Year\'s Day'],
@@ -298,7 +299,7 @@ class _BookingPageState extends State<BookingPage> with TickerProviderStateMixin
       ],
     );
   }
-
+  
   Widget _buildEventList() {
     return ListView(
       children: _selectedEvents
@@ -310,7 +311,10 @@ class _BookingPageState extends State<BookingPage> with TickerProviderStateMixin
                 margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 child: ListTile(
                   title: Text(event.toString()),
-                  onTap: () => print('$event tapped!'),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => BookingConfirm()),)
+                 // onTap: () => print('$event tapped!'),
                 ),
               ))
           .toList(),

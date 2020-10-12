@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import './dashboard.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -17,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Builder(
         builder: (context) => Container(
           padding: EdgeInsets.symmetric(vertical: 32),
-          child: Column(
+          child: ListView(
             children: [
               Image(image: AssetImage('images/app-logo.jpg'), height: 120),
               SizedBox(
@@ -84,8 +83,10 @@ class _LoginPageState extends State<LoginPage> {
                   image: AssetImage('images/login.png'),
                 ),
               ),
-              Flexible(
-                  child: Column(
+              SizedBox(height: 10),
+              // Flexible(
+              //     child: 
+                Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
@@ -95,58 +96,64 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: 18,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FlatButton(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 16,
-                          ),
-                          color: Colors.green,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)),
-                          onPressed: () {
-                            print('English pressed');
-                          },
-                          child: Text(
-                            'English',
-                            style: TextStyle(color: Colors.white, fontSize: 17),
-                          )),
-                      FlatButton(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 16,
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)),
-                          color: Colors.green,
-                          onPressed: () {
-                            print('Hindi Pressed');
-                          },
-                          child: Text(
-                            'Hindi',
-                            style: TextStyle(color: Colors.white, fontSize: 17),
-                          )),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        FlatButton(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 32,
+                              vertical: 16,
+                            ),
+                            color: Theme.of(context).primaryColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            onPressed: () {
+                              print('English pressed');
+                            },
+                            child: Text(
+                              'English',
+                              style: TextStyle(color: Colors.white, fontSize: 17),
+                            )),
+                        FlatButton(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 32,
+                              vertical: 16,
+                            ),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () {
+                              print('Hindi Pressed');
+                            },
+                            child: Text(
+                              'Hindi',
+                              style: TextStyle(color: Colors.white, fontSize: 17),
+                            )),
+                      ],
+                    ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10),
+                    padding: EdgeInsets.only(left: 10, right: 10, top: 10),
                     child: SizedBox(
                       width: double.infinity,
                       child: FlatButton(
                           onPressed: () {
                             print('Login clicked');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Dashboard()),
-                            );
+                            /*
+
+                            WRITE LOGIN CONDITION HERE
+
+
+
+                            */
+                            Navigator.pushNamed(context, 'homescreen');
                           },
                           padding: EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)),
-                          color: Colors.green,
+                          color: Theme.of(context).primaryColor,
                           child: Text(
                             'Log In',
                             style: TextStyle(color: Colors.white, fontSize: 18),
@@ -154,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   )
                 ],
-              ))
+              )
             ],
           ),
         ),
