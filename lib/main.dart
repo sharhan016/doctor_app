@@ -6,7 +6,7 @@ import 'functions/jwt.dart';
 import 'localization/localization.dart';
 import 'screens/login.dart';
 import './routes.dart';
-import './providers/user.dart';
+import './providers/appoinments.dart';
 import './providers/symptoms.dart';
 import './providers/hospitals.dart';
 
@@ -37,9 +37,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // ChangeNotifierProvider(
-        //   create: (context) => UserProvider(),
-        // ),
+        ChangeNotifierProvider(
+          create: (context) => AppoinmentsProvider(),
+        ),
         // ChangeNotifierProvider(
         //   create: (context) => SymptomsProvider(),
         // ),

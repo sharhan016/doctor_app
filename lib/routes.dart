@@ -4,6 +4,7 @@ import 'screens/dashboard.dart';
 import 'screens/patients.dart';
 import 'screens/prescription.dart';
 import 'screens/booking.dart';
+import 'screens/timeslot.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -18,6 +19,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => BookingPage());
       case 'prescriptionscreen':
         return MaterialPageRoute(builder: (_) => PrescriptionPage());
+      case 'timeslotscreen':
+        return MaterialPageRoute(builder: (_) => TimeSlot());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

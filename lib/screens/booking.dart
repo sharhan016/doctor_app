@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../components/bookingConfirm.dart';
+import '../providers/appoinments.dart';
 
 final Map<DateTime, List> _holidays = {
   DateTime(2019, 1, 1): ['New Year\'s Day'],
@@ -25,23 +28,17 @@ class _BookingPageState extends State<BookingPage> with TickerProviderStateMixin
   void initState() {
     super.initState();
     final _selectedDay = DateTime.now();
+    print(_selectedDay);
+    var appoinmentProvider = Provider.of<AppoinmentsProvider>(context, listen: false);
+    appoinmentProvider.updateAppoinments(_selectedDay);
+    print('from booking page');
+    print(appoinmentProvider.appoinments);
 
     _events = {
-      _selectedDay : ['Event A0', 'Event B0', 'Event C0'],
+     
       // _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
       // _selectedDay.subtract(Duration(days: 20)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
-      // _selectedDay.subtract(Duration(days: 16)): ['Event A3', 'Event B3'],
-      // _selectedDay.subtract(Duration(days: 10)): ['Event A4', 'Event B4', 'Event C4'],
-      // _selectedDay.subtract(Duration(days: 4)): ['Event A5', 'Event B5', 'Event C5'],
-      // _selectedDay.subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
-      // _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
-      // _selectedDay.add(Duration(days: 1)): ['Event A8', 'Event B8', 'Event C8', 'Event D8'],
       // _selectedDay.add(Duration(days: 3)): Set.from(['Event A9', 'Event A9', 'Event B9']).toList(),
-      // _selectedDay.add(Duration(days: 7)): ['Event A10', 'Event B10', 'Event C10'],
-      // _selectedDay.add(Duration(days: 11)): ['Event A11', 'Event B11'],
-      // _selectedDay.add(Duration(days: 17)): ['Event A12', 'Event B12', 'Event C12', 'Event D12'],
-      // _selectedDay.add(Duration(days: 22)): ['Event A13', 'Event B13'],
-      // _selectedDay.add(Duration(days: 26)): ['Event A14', 'Event B14', 'Event C14'],
     };
 
     _selectedEvents = _events[_selectedDay] ?? [];
@@ -63,7 +60,11 @@ class _BookingPageState extends State<BookingPage> with TickerProviderStateMixin
   }
 
   void _onDaySelected(DateTime day, List events) {
-    print('CALLBACK: _onDaySelected $events $day ',);
+    var dates = DateTime.parse(day.toString());
+    var formattedDate = "${dates.year}-${dates.month}-${dates.day}";
+    var appoinmentProvider = Provider.of<AppoinmentsProvider>(context, listen: false);
+    appoinmentProvider.updateAppoinments(day);
+    print('CALLBACK: _onDaySelected $formattedDate ',);
     setState(() {
       _selectedEvents = events;
     });
@@ -74,11 +75,14 @@ class _BookingPageState extends State<BookingPage> with TickerProviderStateMixin
   }
 
   void _onCalendarCreated(DateTime first, DateTime last, CalendarFormat format) {
-    print('CALLBACK: _onCalendarCreated');
+   // print('CALLBACK: _onCalendarCreated');
   }
 
   @override
   Widget build(BuildContext context) {
+
+    var appoinmentsProvider = Provider.of<AppoinmentsProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Booking'),
@@ -95,7 +99,12 @@ class _BookingPageState extends State<BookingPage> with TickerProviderStateMixin
           
           // _buildButtons(),
           const SizedBox(height: 8.0),
-          Expanded(child: _buildEventList()),
+          appoinmentsProvider.loaderStatus == LoaderStatus.busy ?
+          SpinKitCircle(
+                  color: Colors.black,
+                  size: 50.0,
+                ) : 
+          Expanded(child: _buildEventList(appoinmentsProvider.appoinments)),
         ],
       ),
     );
@@ -120,7 +129,7 @@ class _BookingPageState extends State<BookingPage> with TickerProviderStateMixin
         centerHeaderTitle: true,
         formatButtonVisible: false,
         headerMargin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 15.0),
-        decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(15.0))
+        decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(5.0))
       ),
       onDaySelected: _onDaySelected,
       onVisibleDaysChanged: _onVisibleDaysChanged,
@@ -300,24 +309,41 @@ class _BookingPageState extends State<BookingPage> with TickerProviderStateMixin
     );
   }
   
-  Widget _buildEventList() {
-    return ListView(
-      children: _selectedEvents
-          .map((event) => Container(
+  Widget _buildEventList(appoinments) {
+       
+    return ListView.builder(
+      itemCount: appoinments.length,
+      itemBuilder:(context, index){
+        var hour = DateTime.parse(appoinments[index]["start_time"]).hour.toString();
+        var minute = DateTime.parse(appoinments[index]["start_time"]).minute.toString();
+        var hours = "";
+        var minutes = "";
+        if(hour.length == 1){
+         hours = "0$hour";
+        }else{
+          hours = hour;
+        }
+        if(minute.length == 1){
+         minutes = "0$minute";
+        }else{
+          minutes = minute;
+        }
+        var time = "$hours : $minutes";
+      return Container(
                 decoration: BoxDecoration(
                   border: Border.all(width: 0.8),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 child: ListTile(
-                  title: Text(event.toString()),
+                  leading: Text(time, style: TextStyle(fontSize: 16)),
+                  trailing: Icon(Icons.chevron_right),
+                  title: appoinments[index]["is_booked"]==true?Text("Booked", style: TextStyle(color: Colors.green),):Text("Not Booked",style: TextStyle(color: Colors.red),),
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => BookingConfirm()),)
-                 // onTap: () => print('$event tapped!'),
                 ),
-              ))
-          .toList(),
-    );
+              );
+      } );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:doctor_app/screens/timeslot.dart';
 import 'package:flutter/material.dart';
 import '../functions/jwt.dart';
 import '../localization/localization.dart';
@@ -5,6 +6,7 @@ import '../components/customAppBar.dart';
 import 'package:provider/provider.dart';
 import '../screens/patients.dart';
 import '../screens/booking.dart';
+import '../screens/prescription.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -67,6 +69,12 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 ListTile(
                   trailing: Icon(Icons.arrow_right),
+                  title: Text('Manage Time Slot'),
+                  //Text(DemoLocalization.of(context).translate('donateNow')),
+                  onTap: () => Navigator.pushNamed(context, 'timeslotscreen'),
+                  ),
+                ListTile(
+                  trailing: Icon(Icons.arrow_right),
                   title: Text('Manage Bookings'),
                   //Text(DemoLocalization.of(context).translate('donateNow')),
                   onTap: () => Navigator.push(
@@ -77,15 +85,14 @@ class _DashboardState extends State<Dashboard> {
                 ListTile(
                   trailing: Icon(Icons.arrow_right),
                   title: Text('Prescriptions'),
-                  //Text(DemoLocalization.of(context).translate('donateNow')),
-                  onTap: () {
-                    // Navigator.pushNamed(context, 'donatescreen');
-                  },
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PrescriptionPage()),
+                  ),
                 ),
                 ListTile(
                   trailing: Icon(Icons.arrow_right),
                   title: Text('Settings'),
-                  //Text(DemoLocalization.of(context).translate('donateNow')),
                   onTap: () {
                     // Navigator.pushNamed(context, 'donatescreen');
                   },
@@ -93,7 +100,6 @@ class _DashboardState extends State<Dashboard> {
                 ListTile(
                   trailing: Icon(Icons.arrow_right),
                   title: Text('Log Out'),
-                  //Text(DemoLocalization.of(context).translate('donateNow')),
                   onTap: () {
                     // Navigator.pushNamed(context, 'donatescreen');
                   },
@@ -133,7 +139,7 @@ class _DashboardState extends State<Dashboard> {
             height: 200,
             width: 200,
             decoration:
-                BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+                BoxDecoration(border: Border.all(color: Theme.of(context).primaryColor)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
